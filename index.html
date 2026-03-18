@@ -185,6 +185,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div class="v-row">
     <span class="vlbl">Voice</span>
     <select id="voiceSelect" onchange="onVoiceChange()"><option>Loading…</option></select>
+    <button class="icon-btn" onclick="lastVoiceCount=0;loadVoices();" title="Refresh voices" style="flex-shrink:0;padding:4px">
+      <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    </button>
   </div>
   <!-- Search bar (hidden by default) -->
   <div id="searchBar">
@@ -281,12 +284,31 @@ function show(id){['libraryScreen','readerScreen'].forEach(s=>document.getElemen
 function showLibrary(){stopAll();playing=false;setPI(false);saveProgress();show('libraryScreen');renderLibrary();}
 
 // ── Voices ──
+// iOS loads voices asynchronously and enhanced voices appear later than basic ones.
+// We poll until the list stabilises (stops growing) before populating the dropdown.
+let voicesPollTimer=null;
+let lastVoiceCount=0;
+
 function loadVoices(){
   const all=speechSynthesis.getVoices();
+  // Keep polling if voices haven't loaded yet or count is still growing
+  if(all.length===0||all.length!==lastVoiceCount){
+    lastVoiceCount=all.length;
+    clearTimeout(voicesPollTimer);
+    voicesPollTimer=setTimeout(loadVoices, 200);
+    return;
+  }
+  // Voice list has stabilised — use it
   voices=all.filter(v=>v.lang.startsWith('en'));
   if(!voices.length)voices=all;
-  // Prefer Enhanced/Premium iOS voices
-  selVoice=voices.find(v=>/ava|samantha|karen|moira|daniel/i.test(v.name)&&/premium|enhanced/i.test(v.name))
+  // Sort: premium first, then enhanced, then rest
+  voices.sort((a,b)=>{
+    const score=v=>/premium/i.test(v.name)?2:/enhanced/i.test(v.name)?1:0;
+    return score(b)-score(a);
+  });
+  // Auto-select best available
+  selVoice=voices.find(v=>/premium/i.test(v.name))
+    ||voices.find(v=>/enhanced/i.test(v.name))
     ||voices.find(v=>/ava|samantha|karen|moira/i.test(v.name))
     ||voices[0]||null;
   populateVoiceSelect();
@@ -296,7 +318,12 @@ speechSynthesis.onvoiceschanged=loadVoices;
 function populateVoiceSelect(){
   const sel=document.getElementById('voiceSelect');
   if(!voices.length){sel.innerHTML='<option>Loading…</option>';return;}
-  sel.innerHTML=voices.map((v,i)=>`<option value="${i}">${v.name}${v.localService?' ★':''}</option>`).join('');
+  sel.innerHTML=voices.map((v,i)=>{
+    const tag=/premium/i.test(v.name)?' ★★':/enhanced/i.test(v.name)?' ★':'';
+    // Clean up the name — iOS often appends (en-GB) etc.
+    const name=v.name.replace(/\s*\(.*?\)\s*/g,'').trim();
+    return`<option value="${i}">${name}${tag}</option>`;
+  }).join('');
   const pref=voices.indexOf(selVoice);
   if(pref>-1)sel.value=pref;
 }
@@ -346,7 +373,7 @@ function openBook(id){
   cur=b.cur||0;
   document.getElementById('rTitle').textContent=b.title||'Untitled';
   show('readerScreen');
-  populateVoiceSelect();
+  lastVoiceCount=0;loadVoices();
   renderText();
   updateUI();
   requestAnimationFrame(()=>requestAnimationFrame(()=>hl(true)));
@@ -380,7 +407,7 @@ async function handleFile(f){
     saveBook(id,{title,sentences:sents,cur:0,lastRead:Date.now()});
     currentBookId=id;sentences=sents;cur=0;
     document.getElementById('rTitle').textContent=title;
-    show('readerScreen');populateVoiceSelect();renderText();updateUI();
+    show('readerScreen');lastVoiceCount=0;loadVoices();renderText();updateUI();
     requestAnimationFrame(()=>requestAnimationFrame(()=>hl(true)));
   }catch(e){alert('Could not read this file. Try a text-based PDF or .txt.');console.error(e);}
   hideLoad();
