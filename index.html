@@ -28,23 +28,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .screen{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .screen.hidden{display:none!important}
 
-/* ── KEY SCREEN ── */
-#keyScreen{align-items:center;justify-content:center;padding:2rem;gap:1.2rem;text-align:center}
-.key-ring{width:80px;height:80px;border-radius:50%;border:1.5px solid var(--border2);background:var(--bg3);display:flex;align-items:center;justify-content:center}
-.key-ring svg{width:32px;height:32px;stroke:var(--gold);fill:none;stroke-width:1.4}
-.kh1{font-family:'Lora',serif;font-size:24px;font-weight:400}
-.kp{font-size:14px;color:var(--text3);line-height:1.7;max-width:290px}
-.key-wrap{width:100%;max-width:320px;position:relative}
-#apiKeyInput{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:10px;padding:13px 44px 13px 14px;font-size:14px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;outline:none}
-#apiKeyInput:focus{border-color:var(--gold)}
-#apiKeyInput::placeholder{color:var(--text4)}
-.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;padding:4px}
-.eye-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5}
-.key-btn{background:var(--gold);color:var(--bg);border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;width:100%;max-width:320px}
-.key-btn:active{background:var(--gold2);transform:scale(.98)}
-.skip-lnk{font-size:13px;color:var(--text4);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.key-err{font-size:13px;color:var(--red);display:none}
-
 /* ── LIBRARY SCREEN ── */
 #libraryScreen{overflow:hidden}
 .lib-hdr{padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
@@ -168,29 +151,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 <body>
 <div id="app">
 
-<!-- API Key -->
-<div id="keyScreen" class="screen">
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;gap:1.2rem;text-align:center">
-    <div class="key-ring"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><line x1="11.5" y1="12.5" x2="22" y2="2"/><line x1="19" y1="5" x2="21" y2="7"/><line x1="15" y1="5" x2="17" y2="7"/></svg></div>
-    <div class="kh1">ElevenLabs voices</div>
-    <div class="kp">Paste your free API key to unlock beautiful, natural-sounding voices.</div>
-    <div class="key-wrap">
-      <input type="password" id="apiKeyInput" placeholder="sk_… your key here" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
-      <button class="eye-btn" onclick="toggleVis()"><svg id="eyeIcon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-    </div>
-    <div class="key-err" id="keyErr">Couldn't verify this key — please check and try again.</div>
-    <button class="key-btn" onclick="saveKey()">Save &amp; continue</button>
-    <span class="skip-lnk" onclick="skipKey()">Use browser voices instead</span>
-    <div class="kp" style="font-size:12px;margin-top:.25rem">Get a free key at <strong style="color:var(--text2)">elevenlabs.io</strong><br>Profile → API Keys · Free: 10,000 chars/month</div>
-  </div>
-</div>
-
 <!-- Library -->
 <div id="libraryScreen" class="screen hidden">
   <div class="lib-hdr">
     <div class="lib-hdr-title">My Books</div>
     <div class="lib-hdr-right">
-      <div class="vbadge" id="libBadge" onclick="showKeyScreen()"><span class="dot" id="bdot"></span><span id="btxt">Browser voices</span></div>
       <button class="icon-btn" onclick="document.getElementById('libFileInput').click()" title="Add book">
         <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
@@ -215,13 +180,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
       <button class="icon-btn" onclick="document.getElementById('libFileInput').click()" title="Add book">
         <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
-      <button class="cog-btn" onclick="showKeyScreen()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
   </div>
   <div class="v-row">
     <span class="vlbl">Voice</span>
     <select id="voiceSelect" onchange="onVoiceChange()"><option>Loading…</option></select>
-    <span class="el-pill" id="elPill">EL</span>
   </div>
   <!-- Search bar (hidden by default) -->
   <div id="searchBar">
@@ -236,10 +199,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
     </div>
   </div>
   <div id="textArea"></div>
-  <div class="usage-row" id="usageRow">
-    <div class="utrack"><div class="ufill" id="ufill"></div></div>
-    <span class="ulbl" id="ulbl">0 / 10k chars</span>
-  </div>
   <div class="r-ctrl">
     <div class="prog-row">
       <span class="plbl" id="pIdx">0</span>
@@ -273,32 +232,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-const EL_VOICES=[
-  {id:'21m00Tcm4TlvDq8ikWAM',name:'Rachel — calm, natural'},
-  {id:'EXAVITQu4vr4xnSDxMaL',name:'Bella — soft, gentle'},
-  {id:'AZnzlk1XvdvUeBnXmlld',name:'Domi — warm, expressive'},
-  {id:'MF3mGyEYCl7XYWbV9V6O',name:'Elli — young, bright'},
-  {id:'TxGEqnHWrfWFTfGW9XjX',name:'Josh — smooth male'},
-  {id:'pNInz6obpgDQGcFmaJgB',name:'Adam — deep, authoritative'},
-  {id:'ErXwobaYiN019PkySvjV',name:'Antoni — warm male'},
-  {id:'VR6AewLTigWG4xSOukaG',name:'Arnold — confident'},
-  {id:'yoZ06aMxZJJ28mfd3POQ',name:'Sam — character voice'},
-];
-
 // ── State ──
 let sentences=[],cur=0,playing=false,spd=1;
-let bVoices=[],selBV=null;
-let apiKey='',useEL=false,selELId=EL_VOICES[0].id;
-let charsUsed=0,curAudio=null;
+let voices=[],selVoice=null;
 let currentBookId=null;
 
 const STORAGE_PREFIX='audiobook_';
-const MAX_BOOKS=20;
 
-// ── Storage helpers ──
+// ── Storage ──
 function saveBook(id,data){
   try{localStorage.setItem(STORAGE_PREFIX+id,JSON.stringify(data));}catch(e){
-    // Storage full — remove oldest book
     const ids=getBookIds();
     if(ids.length>1){localStorage.removeItem(STORAGE_PREFIX+ids[0]);localStorage.setItem(STORAGE_PREFIX+id,JSON.stringify(data));}
   }
@@ -326,44 +269,42 @@ function saveProgress(){
 if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
 window.addEventListener('load',()=>{
-  apiKey=localStorage.getItem('el_key')||'';
-  charsUsed=parseInt(localStorage.getItem('el_chars')||'0');
-  useEL=!!apiKey;
-  loadBVoices();
-  if(apiKey)updateBadge();
-  const hasBooks=getBookIds().length>0;
-  if(!apiKey&&!hasBooks){show('keyScreen');}
-  else{show('libraryScreen');renderLibrary();}
+  loadVoices();
+  show('libraryScreen');
+  renderLibrary();
   if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.navigator.standalone)
     setTimeout(()=>document.getElementById('hint').style.display='block',5000);
 });
 
 // ── Screen nav ──
-function show(id){['keyScreen','libraryScreen','readerScreen'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));}
+function show(id){['libraryScreen','readerScreen'].forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));}
 function showLibrary(){stopAll();playing=false;setPI(false);saveProgress();show('libraryScreen');renderLibrary();}
-function showKeyScreen(){document.getElementById('apiKeyInput').value=apiKey||'';document.getElementById('keyErr').style.display='none';show('keyScreen');}
 
-// ── API Key ──
-function toggleVis(){const i=document.getElementById('apiKeyInput'),ei=document.getElementById('eyeIcon');if(i.type==='password'){i.type='text';ei.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';}else{i.type='password';ei.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';}}
-async function saveKey(){
-  const v=document.getElementById('apiKeyInput').value.trim();
-  document.getElementById('keyErr').style.display='none';
-  if(!v){showErr('Please enter an API key.');return;}
-  loading('Checking your key…');
-  const ok=await testKey(v);hideLoad();
-  if(!ok){showErr("Couldn't verify this key — please check and try again.");return;}
-  apiKey=v;useEL=true;localStorage.setItem('el_key',v);charsUsed=0;
-  updateBadge();
-  const hasBooks=getBookIds().length>0;
-  if(sentences.length){show('readerScreen');populateVoices();}
-  else{show('libraryScreen');renderLibrary();}
+// ── Voices ──
+function loadVoices(){
+  const all=speechSynthesis.getVoices();
+  voices=all.filter(v=>v.lang.startsWith('en'));
+  if(!voices.length)voices=all;
+  // Prefer Enhanced/Premium iOS voices
+  selVoice=voices.find(v=>/ava|samantha|karen|moira|daniel/i.test(v.name)&&/premium|enhanced/i.test(v.name))
+    ||voices.find(v=>/ava|samantha|karen|moira/i.test(v.name))
+    ||voices[0]||null;
+  populateVoiceSelect();
 }
-function skipKey(){useEL=false;updateBadge();show('libraryScreen');renderLibrary();}
-function showErr(m){const e=document.getElementById('keyErr');e.textContent=m;e.style.display='block';}
-async function testKey(k){try{const r=await fetch('https://api.elevenlabs.io/v1/voices',{headers:{'xi-api-key':k}});return r.ok;}catch{return false;}}
-function updateBadge(){
-  document.getElementById('bdot').style.background=useEL?'var(--gold)':'var(--border2)';
-  document.getElementById('btxt').textContent=useEL?'ElevenLabs ✓':'Browser voices';
+speechSynthesis.onvoiceschanged=loadVoices;
+
+function populateVoiceSelect(){
+  const sel=document.getElementById('voiceSelect');
+  if(!voices.length){sel.innerHTML='<option>Loading…</option>';return;}
+  sel.innerHTML=voices.map((v,i)=>`<option value="${i}">${v.name}${v.localService?' ★':''}</option>`).join('');
+  const pref=voices.indexOf(selVoice);
+  if(pref>-1)sel.value=pref;
+}
+
+function onVoiceChange(){
+  const sel=document.getElementById('voiceSelect');
+  selVoice=voices[+sel.value]||null;
+  if(playing){stopAll();speakFrom(cur);}
 }
 
 // ── Library ──
@@ -371,7 +312,11 @@ function renderLibrary(){
   const ids=getBookIds();
   const list=document.getElementById('libraryList');
   if(!ids.length){
-    list.innerHTML=`<div class="empty-lib"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>No books yet.<br>Add your first PDF or TXT file.</span><button class="add-book-btn" onclick="document.getElementById('libFileInput').click()">Add a book</button></div>`;
+    list.innerHTML=`<div class="empty-lib">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>No books yet.<br>Add your first PDF or TXT file.</span>
+      <button class="add-book-btn" onclick="document.getElementById('libFileInput').click()">Add a book</button>
+    </div>`;
     return;
   }
   list.innerHTML=ids.map(id=>{
@@ -401,7 +346,7 @@ function openBook(id){
   cur=b.cur||0;
   document.getElementById('rTitle').textContent=b.title||'Untitled';
   show('readerScreen');
-  populateVoices();
+  populateVoiceSelect();
   renderText();
   updateUI();
   requestAnimationFrame(()=>requestAnimationFrame(()=>hl(true)));
@@ -432,187 +377,42 @@ async function handleFile(f){
     }
     const sents=text.trim().replace(/\s+/g,' ').split(/(?<=[.!?…])\s+(?=[A-Z"'"'])/g).filter(s=>s.trim().length>3);
     const id='book_'+Date.now();
-    const bookData={title,sentences:sents,cur:0,lastRead:Date.now()};
-    saveBook(id,bookData);
-    currentBookId=id;
-    sentences=sents;cur=0;
+    saveBook(id,{title,sentences:sents,cur:0,lastRead:Date.now()});
+    currentBookId=id;sentences=sents;cur=0;
     document.getElementById('rTitle').textContent=title;
-    show('readerScreen');populateVoices();renderText();updateUI();
+    show('readerScreen');populateVoiceSelect();renderText();updateUI();
     requestAnimationFrame(()=>requestAnimationFrame(()=>hl(true)));
   }catch(e){alert('Could not read this file. Try a text-based PDF or .txt.');console.error(e);}
   hideLoad();
 }
 
-// ── Voices ──
-function loadBVoices(){
-  const all=speechSynthesis.getVoices();
-  bVoices=(all.filter(v=>v.lang.startsWith('en')).length?all.filter(v=>v.lang.startsWith('en')):all);
-  selBV=bVoices.find(v=>/samantha|karen|moira|ava|google us/i.test(v.name))||bVoices[0]||null;
-}
-speechSynthesis.onvoiceschanged=loadBVoices;
-
-function populateVoices(){
-  const sel=document.getElementById('voiceSelect'),pill=document.getElementById('elPill'),urow=document.getElementById('usageRow');
-  if(useEL){
-    sel.innerHTML=EL_VOICES.map(v=>`<option value="${v.id}">${v.name}</option>`).join('');
-    sel.value=selELId;pill.style.display='inline';urow.style.display='flex';updateUsage();
-  }else{
-    sel.innerHTML=bVoices.map((v,i)=>`<option value="${i}">${v.name.replace(/\(.*?\)/g,'').trim()}</option>`).join('');
-    const p=bVoices.findIndex(v=>/samantha|karen|moira|ava/i.test(v.name));
-    if(p>-1)sel.value=p;selBV=bVoices[+sel.value]||bVoices[0];
-    pill.style.display='none';urow.style.display='none';
-  }
-}
-function onVoiceChange(){
-  const sel=document.getElementById('voiceSelect');
-  if(useEL)selELId=sel.value;else selBV=bVoices[+sel.value]||null;
-  if(playing){stopAll();playing=true;setPI(true);speakFrom(cur);}
-  else{clearCache();}
-}
-function updateUsage(){const p=Math.min(100,charsUsed/10000*100);document.getElementById('ufill').style.width=p+'%';document.getElementById('ulbl').textContent=`${charsUsed.toLocaleString()} / 10k chars used`;}
-
-// ── Text rendering ──
+// ── Text ──
 function renderText(){
   document.getElementById('textArea').innerHTML=
     sentences.map((s,i)=>`<span class="sentence" id="s${i}" onclick="jumpTo(${i})">${s} </span>`).join('');
 }
 
-// ── TTS — rolling prefetch buffer ──
-//
-// How it works:
-//   audioCache  Map<idx → {url, audio}>  blobs ready to play
-//   fetchingSet Set<idx>                 in-flight requests (no duplicates)
-//   playbackSessionId                    bumped on every stop/jump to discard stale work
-//
-// The buffer manager `fillBuffer(sessionId)` is called:
-//   • when play starts
-//   • every time a sentence finishes playing  ← this is the key change
-//   • any time the cache drops below PREFETCH_AHEAD
-// This means the queue is always trying to stay full — it never drains
-// because we only fired prefetch once.
-
-const PREFETCH_AHEAD = 5;
-let audioCache = new Map();
-let fetchingSet = new Set();
-let playbackSessionId = 0;
-
-function clearCache(){
-  audioCache.forEach(e=>{ try{URL.revokeObjectURL(e.url);}catch{} });
-  audioCache.clear();
-  fetchingSet.clear();
-}
-
-// Fetch one sentence and add to cache
-async function fetchEL(idx, sessionId){
-  if(idx>=sentences.length||fetchingSet.has(idx)||audioCache.has(idx))return;
-  fetchingSet.add(idx);
-  try{
-    const txt=sentences[idx];
-    const res=await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selELId}/stream`,{
-      method:'POST',
-      headers:{'xi-api-key':apiKey,'Content-Type':'application/json','Accept':'audio/mpeg'},
-      body:JSON.stringify({text:txt,model_id:'eleven_turbo_v2',voice_settings:{stability:.5,similarity_boost:.8,speed:spd}})
-    });
-    if(!res.ok)throw new Error(res.status);
-    const blob=await res.blob();
-    if(playbackSessionId!==sessionId)return; // stale — discard
-    const url=URL.createObjectURL(blob);
-    const audio=new Audio(url);
-    audio.preload='auto';
-    audioCache.set(idx,{url,audio});
-    charsUsed+=txt.length;
-    localStorage.setItem('el_chars',charsUsed);
-    updateUsage();
-  }catch(e){console.warn('EL fetch failed idx='+idx,e);}
-  finally{fetchingSet.delete(idx);}
-}
-
-// Fill the buffer from `fromIdx` up to PREFETCH_AHEAD ahead
-// Fires all fetches in parallel — doesn't wait for each one
-function fillBuffer(fromIdx, sessionId){
-  for(let i=0;i<=PREFETCH_AHEAD;i++){
-    const idx=fromIdx+i;
-    if(idx<sentences.length&&!audioCache.has(idx)&&!fetchingSet.has(idx)){
-      fetchEL(idx, sessionId); // intentionally not awaited — fire and forget
-    }
-  }
-}
-
-async function speakFrom(idx){
+// ── TTS (browser voices) ──
+function speakFrom(idx){
   if(idx>=sentences.length){stopAll();playing=false;setPI(false);saveProgress();return;}
   cur=idx;hl();saveProgress();
-  if(useEL) await playEL(idx);
-  else speakBV(idx);
-}
-
-async function playEL(idx){
-  const sessionId=playbackSessionId;
-
-  // Fill buffer from current position immediately — all in parallel
-  fillBuffer(idx, sessionId);
-
-  // Wait for the current sentence to be ready
-  if(!audioCache.has(idx)){
-    setDot('loading');
-    // Poll until cached or session changes — the fetchEL above is already running
-    await new Promise(resolve=>{
-      const check=setInterval(()=>{
-        if(playbackSessionId!==sessionId||audioCache.has(idx)||
-           (!fetchingSet.has(idx)&&!audioCache.has(idx))){
-          clearInterval(check);resolve();
-        }
-      },50);
-    });
-  }
-
-  if(playbackSessionId!==sessionId||!playing)return;
-
-  const entry=audioCache.get(idx);
-  if(!entry){speakBV(idx);return;} // EL failed — fall back
-
-  curAudio=entry.audio;
-  curAudio.playbackRate=spd;
-  setDot('playing');
-
-  curAudio.onended=()=>{
-    if(playbackSessionId!==sessionId||!playing)return;
-    audioCache.delete(idx);
-    try{URL.revokeObjectURL(entry.url);}catch{}
-    // Refill buffer every time a sentence ends — this is what keeps it full
-    fillBuffer(cur+1, sessionId);
-    speakFrom(cur+1);
-  };
-  curAudio.onerror=()=>{
-    if(playbackSessionId!==sessionId)return;
-    audioCache.delete(idx);
-    try{URL.revokeObjectURL(entry.url);}catch{}
-    if(playing)speakBV(cur);
-  };
-
-  try{ await curAudio.play(); }
-  catch(e){ if(playing)speakBV(idx); }
-}
-
-function speakBV(idx){
   setDot('playing');
   const u=new SpeechSynthesisUtterance(sentences[idx]);
-  u.rate=spd;if(selBV)u.voice=selBV;
+  u.rate=spd;
+  if(selVoice)u.voice=selVoice;
   u.onend=()=>{if(playing)speakFrom(cur+1);};
   u.onerror=e=>{if(e.error!=='interrupted'&&playing)speakFrom(cur+1);};
   speechSynthesis.speak(u);
 }
 
 function stopAll(){
-  playbackSessionId++; // invalidate all in-flight fetches and callbacks
   speechSynthesis.cancel();
-  if(curAudio){curAudio.pause();curAudio.onended=null;curAudio.onerror=null;curAudio=null;}
-  clearCache();
+  setDot('');
 }
 
 function togglePlay(){
   if(playing){
     playing=false;stopAll();setPI(false);setDot('paused');
-    // Show bookmark toast
     showToast('📍 Saved — sentence '+cur);
     saveProgress();
   }else{
@@ -620,9 +420,22 @@ function togglePlay(){
   }
 }
 
-function jumpTo(idx){const w=playing;stopAll();cur=idx;hl();saveProgress();if(w){playing=true;setPI(true);speakFrom(cur);}else{setDot('paused');}}
-function skip(d){const w=playing;stopAll();cur=Math.max(0,Math.min(sentences.length-1,cur+d));hl();saveProgress();if(w){speakFrom(cur);}else{setDot('paused');}}
-function setSpd(s,b){spd=s;document.querySelectorAll('.spd').forEach(x=>x.classList.remove('on'));b.classList.add('on');if(playing){stopAll();playing=true;setPI(true);setTimeout(()=>speakFrom(cur),60);}else{clearCache();}}
+function jumpTo(idx){
+  const w=playing;stopAll();cur=idx;hl();saveProgress();
+  if(w){playing=true;setPI(true);speakFrom(cur);}else{setDot('paused');}
+}
+
+function skip(d){
+  const w=playing;stopAll();
+  cur=Math.max(0,Math.min(sentences.length-1,cur+d));hl();saveProgress();
+  if(w){speakFrom(cur);}else{setDot('paused');}
+}
+
+function setSpd(s,b){
+  spd=s;
+  document.querySelectorAll('.spd').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  if(playing){stopAll();setTimeout(()=>speakFrom(cur),60);}
+}
 
 function setPI(p){document.getElementById('playIcon').innerHTML=p?'<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>':'<polygon points="6,3 20,12 6,21"/>';}
 function setDot(s){const d=document.getElementById('sdot');d.classList.remove('playing','loading','paused');if(s)d.classList.add(s);}
@@ -633,17 +446,12 @@ function hl(scroll=true){
     el.classList.toggle('spoken',i<cur);
     el.classList.toggle('active',i===cur);
     el.classList.toggle('bookmarked',i===cur&&!playing);
-    el.classList.remove('fetching');
   });
   if(scroll){
     const el=document.getElementById('s'+cur);
     if(el){
-      // Center the active sentence in the scroll container
       const ta=document.getElementById('textArea');
-      const elTop=el.offsetTop;
-      const elH=el.offsetHeight;
-      const taH=ta.clientHeight;
-      ta.scrollTo({top:elTop-taH/2+elH/2,behavior:'smooth'});
+      ta.scrollTo({top:el.offsetTop-ta.clientHeight/2+el.offsetHeight/2,behavior:'smooth'});
     }
   }
   updateUI();
@@ -673,27 +481,21 @@ function showToast(msg){
 function loading(m){document.getElementById('ltxt').textContent=m||'Loading…';document.getElementById('loading').classList.add('show');}
 function hideLoad(){document.getElementById('loading').classList.remove('show');}
 
-// ── Visibility ──
+// ── Visibility: resume if iOS killed speech ──
 document.addEventListener('visibilitychange',()=>{
-  if(!document.hidden&&playing&&!speechSynthesis.speaking&&!curAudio)speakFrom(cur);
+  if(!document.hidden&&playing&&!speechSynthesis.speaking)speakFrom(cur);
 });
 
-// ── Unload: save position ──
 window.addEventListener('pagehide',saveProgress);
 window.addEventListener('beforeunload',saveProgress);
 
 // ── Search ──
-let srchMatches=[];  // array of sentence indices that match
-let srchPos=-1;      // which match we're currently on
+let srchMatches=[],srchPos=-1;
 
 function toggleSearch(){
   const bar=document.getElementById('searchBar');
-  if(bar.classList.contains('open')){
-    closeSearch();
-  }else{
-    bar.classList.add('open');
-    setTimeout(()=>document.getElementById('srchInput').focus(),80);
-  }
+  if(bar.classList.contains('open')){closeSearch();}
+  else{bar.classList.add('open');setTimeout(()=>document.getElementById('srchInput').focus(),80);}
 }
 
 function closeSearch(){
@@ -705,76 +507,33 @@ function closeSearch(){
 }
 
 function clearSearchHighlights(){
-  document.querySelectorAll('.sentence.match,.sentence.match-active').forEach(el=>{
-    el.classList.remove('match','match-active');
-  });
+  document.querySelectorAll('.sentence.match,.sentence.match-active').forEach(el=>el.classList.remove('match','match-active'));
 }
 
 function onSearch(){
   const q=document.getElementById('srchInput').value.trim().toLowerCase();
-  clearSearchHighlights();
-  srchMatches=[];srchPos=-1;
-
-  if(q.length<2){
-    document.getElementById('srchNav').style.display='none';
-    return;
-  }
-
-  // Find all matching sentences
+  clearSearchHighlights();srchMatches=[];srchPos=-1;
+  if(q.length<2){document.getElementById('srchNav').style.display='none';return;}
   sentences.forEach((s,i)=>{
-    if(s.toLowerCase().includes(q)){
-      srchMatches.push(i);
-      const el=document.getElementById('s'+i);
-      if(el)el.classList.add('match');
-    }
+    if(s.toLowerCase().includes(q)){srchMatches.push(i);const el=document.getElementById('s'+i);if(el)el.classList.add('match');}
   });
-
   const nav=document.getElementById('srchNav');
-  const total=document.getElementById('srchTotal');
-  const curEl=document.getElementById('srchCur');
-  total.textContent=srchMatches.length;
-
-  if(!srchMatches.length){
-    curEl.textContent='0';
-    nav.style.display='flex';
-    document.getElementById('srchPrev').disabled=true;
-    document.getElementById('srchNext').disabled=true;
-    return;
-  }
-
+  document.getElementById('srchTotal').textContent=srchMatches.length;
+  if(!srchMatches.length){document.getElementById('srchCur').textContent='0';nav.style.display='flex';document.getElementById('srchPrev').disabled=true;document.getElementById('srchNext').disabled=true;return;}
   nav.style.display='flex';
-  document.getElementById('srchPrev').disabled=false;
-  document.getElementById('srchNext').disabled=false;
-
-  // Jump to first match nearest to current reading position
-  let nearest=0;
-  let minDist=Infinity;
-  srchMatches.forEach((idx,i)=>{
-    const d=Math.abs(idx-cur);
-    if(d<minDist){minDist=d;nearest=i;}
-  });
-  srchPos=nearest;
-  highlightMatch();
+  document.getElementById('srchPrev').disabled=false;document.getElementById('srchNext').disabled=false;
+  let nearest=0,minDist=Infinity;
+  srchMatches.forEach((idx,i)=>{const d=Math.abs(idx-cur);if(d<minDist){minDist=d;nearest=i;}});
+  srchPos=nearest;highlightMatch();
 }
 
-function searchStep(dir){
-  if(!srchMatches.length)return;
-  srchPos=(srchPos+dir+srchMatches.length)%srchMatches.length;
-  highlightMatch();
-}
+function searchStep(dir){if(!srchMatches.length)return;srchPos=(srchPos+dir+srchMatches.length)%srchMatches.length;highlightMatch();}
 
 function highlightMatch(){
-  // Remove previous active
   document.querySelectorAll('.sentence.match-active').forEach(el=>el.classList.remove('match-active'));
-
   const idx=srchMatches[srchPos];
   const el=document.getElementById('s'+idx);
-  if(el){
-    el.classList.add('match-active');
-    // Scroll to center
-    const ta=document.getElementById('textArea');
-    ta.scrollTo({top:el.offsetTop - ta.clientHeight/2 + el.offsetHeight/2, behavior:'smooth'});
-  }
+  if(el){el.classList.add('match-active');const ta=document.getElementById('textArea');ta.scrollTo({top:el.offsetTop-ta.clientHeight/2+el.offsetHeight/2,behavior:'smooth'});}
   document.getElementById('srchCur').textContent=srchPos+1;
   document.getElementById('srchPrev').disabled=srchMatches.length<=1;
   document.getElementById('srchNext').disabled=srchMatches.length<=1;
@@ -785,7 +544,6 @@ function onSearchKey(e){
   if(e.key==='Escape'){closeSearch();}
 }
 
-// Close search when user taps a sentence to jump to it
 const _origJumpTo=jumpTo;
 jumpTo=function(idx){
   if(document.getElementById('searchBar').classList.contains('open'))closeSearch();
