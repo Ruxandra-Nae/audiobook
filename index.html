@@ -284,8 +284,6 @@ function show(id){['libraryScreen','readerScreen'].forEach(s=>document.getElemen
 function showLibrary(){stopAll();playing=false;setPI(false);saveProgress();show('libraryScreen');renderLibrary();}
 
 // ── Voices ──
-// iOS PWA loads voices very late — we poll aggressively until they appear.
-// Priority list matches exactly what Ruxandra has downloaded.
 const PREF_VOICES=['Zoe','Karen','Lee','Samantha','Susan','Tom'];
 let voicesPollTimer=null;
 let voicesPollCount=0;
@@ -295,29 +293,31 @@ function loadVoices(){
   const en=all.filter(v=>v.lang.startsWith('en'));
   const found=en.length?en:all;
 
-  // Keep polling for up to 10 seconds if we haven't found any local/enhanced voices yet
-  const hasGood=found.some(v=>v.localService||/enhanced|premium/i.test(v.name));
-  if((!found.length||!hasGood)&&voicesPollCount<50){
+  // Poll up to 10 seconds waiting for local (downloaded) voices to appear
+  const hasLocal=found.some(v=>v.localService);
+  if((!found.length||!hasLocal)&&voicesPollCount<50){
     voicesPollCount++;
     clearTimeout(voicesPollTimer);
     voicesPollTimer=setTimeout(loadVoices,200);
-    if(!found.length)return; // nothing to show yet
+    if(!found.length)return;
   }
 
   voices=found;
-  // Sort: premium first, enhanced second, local (downloaded) third, rest last
+  // Sort: local (downloaded) first, then remote
   voices.sort((a,b)=>{
-    const rank=v=>/premium/i.test(v.name)?3:/enhanced/i.test(v.name)?2:v.localService?1:0;
+    const rank=v=>v.localService?1:0;
     return rank(b)-rank(a);
   });
 
-  // Auto-select best match from downloaded list
+  // Pick best: prefer local version of priority voices
   selVoice=null;
   for(const name of PREF_VOICES){
-    const found=voices.find(v=>v.name.toLowerCase().startsWith(name.toLowerCase()));
-    if(found){selVoice=found;break;}
+    // First try local (downloaded/premium) version
+    const local=voices.find(v=>v.name.toLowerCase().startsWith(name.toLowerCase())&&v.localService);
+    if(local){selVoice=local;break;}
   }
-  if(!selVoice)selVoice=voices.find(v=>/premium|enhanced/i.test(v.name))||voices[0]||null;
+  // Fallback: any local voice, then any voice
+  if(!selVoice)selVoice=voices.find(v=>v.localService)||voices[0]||null;
 
   populateVoiceSelect();
 }
@@ -327,9 +327,9 @@ function populateVoiceSelect(){
   const sel=document.getElementById('voiceSelect');
   if(!voices.length){sel.innerHTML='<option>Loading…</option>';return;}
   sel.innerHTML=voices.map((v,i)=>{
-    const quality=/premium/i.test(v.name)?'★★':/enhanced/i.test(v.name)?'★':v.localService?'·':'';
+    const quality=v.localService?' ★':'';
     const name=v.name.replace(/\s*\(.*?\)\s*/g,'').trim();
-    return`<option value="${i}">${name}${quality?' '+quality:''}</option>`;
+    return`<option value="${i}">${name}${quality}</option>`;
   }).join('');
   const pref=voices.indexOf(selVoice);
   if(pref>-1)sel.value=pref;
